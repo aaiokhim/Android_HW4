@@ -7,21 +7,14 @@ import androidx.work.WorkManager
 import android.widget.Button
 import androidx.work.workDataOf
 import java.util.concurrent.TimeUnit
-import com.example.android_hw4.NotificationWorker
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.android_hw4.ui.theme.Android_HW4Theme
+import android.widget.EditText
+import android.widget.TextView
+import java.util.UUID
+import androidx.activity.result.contract.ActivityResultContracts
 
 class MainActivity : ComponentActivity() {
     private lateinit var workManager: WorkManager
-    private var workId: String? = null
+    private var workRequestId: UUID? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,11 +22,12 @@ class MainActivity : ComponentActivity() {
 
         val btnCreateSchedule = findViewById<Button>(R.id.btn_create_schedule)
         val btnDeleteSchedule = findViewById<Button>(R.id.btn_delete_schedule)
-        val inputReminder = findViewById<Button>(R.id.input_text_reminder)
-        val inputDelay = findViewById<Button>(R.id.input_delay_time)
+        val inputReminder = findViewById<EditText>(R.id.input_text_reminder)
+        val inputDelay = findViewById<EditText>(R.id.input_delay_time)
+        val stateReminder = findViewById<TextView>(R.id.state_reminder)
+
 
         workManager = WorkManager.getInstance(this)
-
 
         btnCreateSchedule.setOnClickListener {
             val title = inputReminder.text.toString().takeIf { it.isNotBlank() } ?: "Reminder"
@@ -51,19 +45,27 @@ class MainActivity : ComponentActivity() {
         val notificationRequest = OneTimeWorkRequestBuilder<NotificationWorker>()
             .setInitialDelay(delay, TimeUnit.SECONDS)
             .setInputData(workDataOf(
-                "title" to title,
-                "message" to title
+                "notification_title" to title,
+                "notification_time" to delay.toInt()
             ))
             .addTag("reminder_tag")
             .build()
-        workId = notificationRequest.id.toString()
+
+        workRequestId = notificationRequest.id
         workManager.enqueue(notificationRequest)
 
+        findViewById<TextView>(R.id.state_reminder)?.text = "State: Scheduled for $delay seconds"
 
     }
 
     private fun deleteNotification() {
-
+        (workRequestId)?.let { id ->
+            workManager.cancelWorkById(id)
+            workRequestId = null
+            findViewById<TextView>(R.id.state_reminder)?.text = "State: cancle"
+        } ?: run {
+            findViewById<TextView>(R.id.state_reminder)?.text = "State: no notifications"
+        }
     }
 }
 
