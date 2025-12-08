@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:id="@+id/activity_main"
+android:orientation="vertical"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:gravity="center">
+
+<EditText
+    android:id="@+id/input_text_reminder"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="Input text reminder"
+    android:gravity="center"
+    android:textSize="16sp"
+    android:layout_marginBottom="20dp" />
+
+<EditText
+    android:id="@+id/input_delay_time"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="Input delay time"
+    android:gravity="center"
+    android:textSize="16sp"
+    android:layout_marginBottom="20dp" />
+
+<Button
+    android:id="@+id/btn_create_schedule"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Schedule reminder"
+    android:textSize="16sp" />
+
+<Button
+    android:id="@+id/btn_delete_schedule"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Delete_schedule"
+    android:textSize="16sp"
+    android:layout_marginBottom="20dp" />
+
+<TextView
+    android:id="@+id/state_reminder"
+    android:layout_width="200dp"
+    android:layout_height="100dp"
+    android:gravity="center"
+    android:text="state"
+    android:textSize="16sp"
+    android:layout_marginBottom="20dp" />
+
+</LinearLayout>
