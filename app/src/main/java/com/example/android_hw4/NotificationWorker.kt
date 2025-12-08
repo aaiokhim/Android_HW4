@@ -6,7 +6,6 @@ import androidx.work.WorkerParameters
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 
-
 class NotificationWorker(
     context: Context,
     params: WorkerParameters
@@ -37,6 +36,15 @@ class NotificationWorker(
     }
 
     private fun notificationChannel() {
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) {
+            return
+        }
+        val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
+
+        if (notificationManager.getNotificationChannel(CHANNEL_ID) != null) {
+            android.util.Log.d("NotificationWorker", "Notification channel exists")
+            return
+        }
 
         val channel = android.app.NotificationChannel(
             CHANNEL_ID,
@@ -46,10 +54,8 @@ class NotificationWorker(
             description = "Channel for reminder"
         }
 
-        val notificationManager =
-            applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
         notificationManager.createNotificationChannel(channel)
-
+        android.util.Log.d("NotificationWorker", "Notification channel created")
     }
 
     companion object {
